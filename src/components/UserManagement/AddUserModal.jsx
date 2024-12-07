@@ -68,10 +68,10 @@ const AddUserModal = ({ open, onClose }) => {
             value={userData.role}
             onChange={handleInputChange}
             label="Role"
-          >
+            >
             <MenuItem value="Manager">Manager</MenuItem>
             <MenuItem value="Admin">Admin</MenuItem>
-            <MenuItem value="SDR">SDR</MenuItem>
+            <MenuItem value="SDE">SDE</MenuItem>
             <MenuItem value="Intern">Intern</MenuItem>
             <MenuItem value="Product">Product</MenuItem>
           </Select>
@@ -79,6 +79,8 @@ const AddUserModal = ({ open, onClose }) => {
 
         {/* Permission Checkboxes */}
         <FormControl component="fieldset" sx={{ marginBottom: 2 }}>
+              {/* <InputLabel>Role</InputLabel> */}
+              {/* Permissions */}
           <FormControlLabel
             control={<Checkbox
               value="Read"

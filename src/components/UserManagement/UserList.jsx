@@ -15,7 +15,8 @@ const UserList = () => {
 
   return (
     <div>
-      <Button variant="contained" onClick={() => setAddModalOpen(true)}>Add User</Button>
+      <Button variant="contained" onClick={() => setAddModalOpen(true)}>
+        Add User</Button>
       <TableContainer component={Paper} sx={{ marginTop: 4 }}>
         <Table>
           <TableHead>

@@ -1,115 +1,89 @@
-import React, { useState } from 'react';
-import { fetchUsers, addUser } from '../../api/mockApi';
-import { Button, Table, TableBody, TableCell, TableHead, TableRow, TextField, Select, MenuItem } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { fetchRoles, updateRole } from '../../api/mockApi'; // Fetch & update mock API methods
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Paper,
+  Select,
+  MenuItem,
+  TableContainer,
+} from '@mui/material';
 
 const RoleList = () => {
-  const [users, setUsers] = useState(fetchUsers());
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    role: '',
-    status: 'Active',
-  });
-  const [showForm, setShowForm] = useState(false);
+  const [roles, setRoles] = useState([]);
 
-  // Handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  useEffect(() => {
+    // Fetch roles when component mounts
+    setRoles(fetchRoles());
+  }, []);
+
+  // Handle changes in the Role dropdown
+  const handleRoleChange = (id, newRole) => {
+    setRoles((prevRoles) =>
+      prevRoles.map((role) =>
+        role.id === id ? { ...role, role: newRole } : role
+      )
+    );
+    updateRole(id, { role: newRole }); // Mock API update
   };
 
-  // Add user function
-  const handleAddUser = (e) => {
-    e.preventDefault(); // Prevent form refresh
-
-    // Add new user to the database
-    addUser(formData);
-
-    // Update the local state to refresh the table
-    setUsers(fetchUsers());
-
-    // Reset the form and hide it
-    setFormData({ name: '', email: '', role: '', status: 'Active' });
-    setShowForm(false);
+  // Handle changes in the Status dropdown
+  const handleStatusChange = (id, newStatus) => {
+    setRoles((prevRoles) =>
+      prevRoles.map((role) =>
+        role.id === id ? { ...role, status: newStatus } : role
+      )
+    );
+    updateRole(id, { status: newStatus }); // Mock API update
   };
 
   return (
-    <div>
-      {/* <Button variant="contained" color="primary" onClick={() => setShowForm(!showForm)}>
-        {showForm ? 'Cancel' : 'Add User'}
-      </Button> */}
-
-      {showForm && (
-        <form onSubmit={handleAddUser}>
-          <div>
-            <TextField
-              label="Name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              required
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Role"
-              name="role"
-              value={formData.role}
-              onChange={handleInputChange}
-              required
-              fullWidth
-              margin="normal"
-            />
-            <Select
-              label="Status"
-              name="status"
-              value={formData.status}
-              onChange={handleInputChange}
-              fullWidth
-              margin="normal"
-            >
-              <MenuItem value="Active">Active</MenuItem>
-              <MenuItem value="Inactive">Inactive</MenuItem>
-            </Select>
-          </div>
-          <Button type="submit" variant="contained" color="success">
-            Save User
-          </Button>
-        </form>
-      )}
-
+    <TableContainer component={Paper} sx={{ marginTop: 4 }}>
       <Table>
         <TableHead>
           <TableRow>
             <TableCell>ID</TableCell>
             <TableCell>Name</TableCell>
-            <TableCell>Email</TableCell>
             <TableCell>Role</TableCell>
             <TableCell>Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell>{user.id}</TableCell>
-              <TableCell>{user.name}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>{user.role}</TableCell>
-              <TableCell>{user.status}</TableCell>
+          {roles.map((role) => (
+            <TableRow key={role.id}>
+              <TableCell>{role.id}</TableCell>
+              <TableCell>{role.name}</TableCell>
+              <TableCell>
+                <Select
+                  value={role.role}
+                  onChange={(e) => handleRoleChange(role.id, e.target.value)}
+                  fullWidth
+                >
+                  <MenuItem value="Manager">Manager</MenuItem>
+                  <MenuItem value="Admin">Admin</MenuItem>
+                  <MenuItem value="SDE">SDE</MenuItem>
+                  <MenuItem value="Intern">Intern</MenuItem>
+                  <MenuItem value="Product">Product</MenuItem>
+                </Select>
+              </TableCell>
+              <TableCell>
+                <Select
+                  value={role.status}
+                  onChange={(e) => handleStatusChange(role.id, e.target.value)}
+                  fullWidth
+                >
+                  <MenuItem value="Active">Active</MenuItem>
+                  <MenuItem value="Inactive">Inactive</MenuItem>
+                </Select>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </div>
+    </TableContainer>
   );
 };
 

@@ -1,38 +1,34 @@
+// mockApi.js
 let users = [
-    { id: 1, name: 'Alice', email: 'alice@example.com', role: 'Admin', status: 'Active' },
-    { id: 2, name: 'Bob', email: 'bob@example.com', role: 'User', status: 'Inactive' },
+    // Example existing users
+    { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Manager', permissions: ['Read', 'Write'], status: 'Active' },
+    { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'Admin', permissions: ['Read'], status: 'Inactive' },
+    // Add more users here
   ];
   
-  let roles = [
-    { id: 1, name: 'Admin' },
-    { id: 2, name: 'User' },
-  ];
-  
-  // User management
-  export const fetchUsers = () => users;
-  
-  export const addUser = (user) => {
-    users.push({ id: users.length + 1, ...user });
+  // Fetch users
+  export const fetchUsers = () => {
+    return users;
   };
   
-  export const updateUser = (id, updatedData) => {
-    users = users.map(user => user.id === id ? { ...user, ...updatedData } : user);
+  // Add a new user
+  export const addUser = (userData) => {
+    // Create a new user object with the provided data
+    const newUser = {
+      id: users.length + 1, // Generate a new ID for the user
+      name: userData.name,
+      email: userData.email,
+      role: userData.role,
+      permissions: userData.permissions, // New permissions field
+      status: userData.status, // New status field
+    };
+  
+    // Add the new user to the list of users
+    users.push(newUser);
   };
   
-  export const deleteUser = (id) => {
-    users = users.filter(user => user.id !== id);
-  };
-  
-  // Role management
-  export const fetchRoles = () => roles;
-  
-  export const addRole = (roleName) => {
-    const newRole = { id: roles.length + 1, name: roleName };
-    roles.push(newRole);
-    return newRole;
-  };
-  
-  export const deleteRole = (roleId) => {
-    roles = roles.filter(role => role.id !== roleId);
+  // Remove a user by ID
+  export const deleteUser = (userId) => {
+    users = users.filter(user => user.id !== userId);
   };
   
